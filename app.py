@@ -100,11 +100,11 @@ def webhook():
     elif msg == "4":
         resp.message(
             "📌 *Nossos Principais Projetos:*\n\n"
-            "1️⃣ *Educação Infantil:* Creches que atendem centenas de crianças em período integral.\n"
-            "2️⃣ *Batuíra em Ação:* Cursos profissionalizantes para jovens e adultos da comunidade.\n"
-            "3️⃣ *Serviço de Convivência:* Atividades socioeducativas para fortalecer vínculos familiares.\n"
-            "4️⃣ *Entrega de Alimentos:* Programas de combate à fome e segurança alimentar.\n"
-            "5️⃣ *Apoio Psicológico:* Atendimento especializado para famílias da região.\n\n"
+            " *Educação Infantil:* Creches que atendem centenas de crianças em período integral.\n"
+            " *Batuíra em Ação:* Cursos profissionalizantes para jovens e adultos da comunidade.\n"
+            " *Serviço de Convivência:* Atividades socioeducativas para fortalecer vínculos familiares.\n"
+            " *Entrega de Alimentos:* Programas de combate à fome e segurança alimentar.\n"
+            " *Apoio Psicológico:* Atendimento especializado para famílias da região.\n\n"
             "0️⃣ Voltar ao Menu Principal"
         )
 
