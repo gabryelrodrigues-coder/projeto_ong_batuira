@@ -45,19 +45,22 @@ def pagina_doacao():
 # --- ROTA DO CHATBOT (WHATSAPP) ---
 @app.route("/webhook", methods=["POST"])
 def webhook():
-    msg = request.form.get("Body").strip().lower()
+    # TRATAMENTO DE ERRO: Verifica se a mensagem existe antes de processar
+    raw_body = request.form.get("Body")
+    msg = raw_body.strip().lower() if raw_body else ""
+    
     remetente = request.form.get("From")
     resp = MessagingResponse()
 
     # MENU PRINCIPAL
-    if msg in ["0", "oi", "ola", "olá", "menu"]:
+    if msg in ["0", "oi", "ola", "olá", "menu", "voltar"]:
         resp.message(
             "👋 *Bem-vindo ao Núcleo Batuíra*\n\n"
             "Como podemos ajudar hoje?\n\n"
-            "1️⃣ *Doações* (Contribuir ou Consultar)\n"
-            "2️⃣ *Conhecer a ONG* (História e Site)\n"
-            "3️⃣ *Contato* (Endereço e Horários)\n"
-            "4️⃣ *Nossos Projetos* (O que fazemos)\n\n"
+            "1️⃣ *Doações*\n"
+            "2️⃣ *Conhecer a ONG*\n"
+            "3️⃣ *Contato*\n"
+            "4️⃣ *Nossos Projetos*\n\n"
             "👉 _Digite o número da opção desejada._"
         )
 
@@ -65,8 +68,8 @@ def webhook():
     elif msg == "1":
         resp.message(
             "💳 *Central de Doações*\n\n"
-            "5️⃣ *Quero Doar* (Receber link)\n"
-            "6️⃣ *Consultar Histórico* (Ver minhas doações)\n\n"
+            "5️⃣ *Quero Doar*\n"
+            "6️⃣ *Consultar Histórico*\n\n"
             "0️⃣ Voltar ao Menu Principal"
         )
 
@@ -74,8 +77,7 @@ def webhook():
     elif msg == "2":
         resp.message(
             "🏢 *Sobre o Núcleo Batuíra*\n\n"
-            "Fundado em 1939, o Núcleo Batuíra é uma organização sem fins lucrativos que promove a assistência social, "
-            "educação e o desenvolvimento de famílias em situação de vulnerabilidade em Guarulhos.\n\n"
+            "Fundado em 1939, o Núcleo Batuíra é uma organização sem fins lucrativos que promove assistência social e educação em Guarulhos.\n\n"
             "🌐 *Acesse nosso site:* https://nucleobatuira.org.br/\n\n"
             "0️⃣ Voltar ao Menu Principal"
         )
@@ -96,24 +98,23 @@ def webhook():
             "0️⃣ Voltar ao Menu Principal"
         )
 
-    # 4. PROJETOS
+    # 4. PROJETOS (SEM NÚMEROS)
     elif msg == "4":
         resp.message(
             "📌 *Nossos Principais Projetos:*\n\n"
-            " Educação Infantil:* Creches que atendem centenas de crianças em período integral.\n"
-            " Batuíra em Ação:* Cursos profissionalizantes para jovens e adultos da comunidade.\n"
-            " Serviço de Convivência:* Atividades socioeducativas para fortalecer vínculos familiares.\n"
-            " Entrega de Alimentos:* Programas de combate à fome e segurança alimentar.\n"
-            " Apoio Psicológico:* Atendimento especializado para famílias da região.\n\n"
+            "• *Educação Infantil:* Creches para crianças em período integral.\n"
+            "• *Batuíra em Ação:* Cursos profissionalizantes para a comunidade.\n"
+            "• *Serviço de Convivência:* Fortalecimento de vínculos familiares.\n"
+            "• *Entrega de Alimentos:* Combate à insegurança alimentar.\n"
+            "• *Apoio Psicológico:* Atendimento especializado para famílias.\n\n"
             "0️⃣ Voltar ao Menu Principal"
         )
 
     # 5. LINK PARA DOAR
     elif msg == "5":
-        # ATENÇÃO: Atualize o link abaixo com o seu endereço real da Render!
         resp.message(
             "💙 *Que alegria contar com você!*\n\n"
-            "Acesse o link abaixo para realizar sua doação com segurança:\n"
+            "Acesse o link abaixo para realizar sua doação:\n"
             "https://projeto-ong-batuira.onrender.com/doar\n\n"
             "0️⃣ Voltar ao Menu Principal"
         )
@@ -128,15 +129,17 @@ def webhook():
                 relatorio += f"✅ R$ {d.valor:.2f}\n"
                 total += d.valor
             relatorio += f"\n💰 *Total acumulado: R$ {total:.2f}*"
-            relatorio += "\n\nMuito obrigado por transformar vidas! ❤️\n\n0️⃣ Voltar ao Menu"
+            relatorio += "\n\nMuito obrigado! ❤️\n\n0️⃣ Voltar ao Menu"
         else:
             relatorio = "❌ Não encontramos doações vinculadas a este número.\n\n0️⃣ Voltar ao Menu"
         resp.message(relatorio)
 
+    # TRATAMENTO PARA MENSAGENS NÃO RECONHECIDAS
     else:
-        resp.message("Ops! Não entendi. Digite *0* para voltar ao Menu Principal.")
+        resp.message("Ops! Não entendi. Digite *0* para ver as opções do Menu.")
 
     return str(resp)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
